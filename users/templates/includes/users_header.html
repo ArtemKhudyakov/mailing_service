@@ -1,0 +1,32 @@
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3">
+    <h5 class="my-0 mr-md-auto font-weight-normal">
+        <a href="{% url 'users:profile_edit' %}" class="text-dark text-decoration-none">Мой профиль</a>
+    </h5>
+    <nav class="ms-5">
+        {% if user.is_authenticated %}
+            <span class="me-3">Привет, {{ user.username }}!</span>
+            {% if user.avatar %}
+                <img src="{{ user.avatar.url }}" alt="Аватар" class="avatar-sm me-2">
+            {% endif %}
+            <a href="{% url 'users:profile_edit' %}" class="btn btn-sm btn-outline-primary me-2">
+                <i class="bi bi-pencil-square"></i> Профиль
+            </a>
+            <form action="{% url 'users:logout' %}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-danger me-2">
+                    <i class="bi bi-box-arrow-right"></i> Выйти
+                </button>
+            </form>
+        {% else %}
+            <a class="btn btn-sm btn-success me-2" href="{% url 'users:register' %}">
+                <i class="bi bi-person-plus"></i> Регистрация
+            </a>
+            <a class="btn btn-sm btn-outline-primary me-2" href="{% url 'users:login' %}">
+                <i class="bi bi-box-arrow-in-right"></i> Войти
+            </a>
+        {% endif %}
+        <a class="btn btn-sm btn-outline-secondary" href="#">
+            <i class="bi bi-journal-text"></i> Блог
+        </a>
+    </nav>
+</div>
