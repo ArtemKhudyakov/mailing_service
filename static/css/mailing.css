@@ -80,3 +80,40 @@ footer a, footer button {
 hr.opacity-10 {
     border-color: rgba(0,0,0,0.1) !important;
 }
+
+/* Стили для форм */
+.form-floating label {
+    color: #6c757d;
+    transition: all 0.2s;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+    background: white;
+    padding: 0 0.3rem;
+    color: #0d6efd;
+}
+
+/* Кастомные элементы */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.position-relative {
+    position: relative;
+}
+
+.position-absolute {
+    position: absolute;
+}
+
+/* Анимации */
+.img-thumbnail {
+    transition: all 0.3s ease;
+}
+
+.img-thumbnail:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}

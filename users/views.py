@@ -22,7 +22,7 @@ class CustomLogoutView(LogoutView):
 class UserRegisterView(CreateView):
     model = User
     form_class = UserRegistrationForm
-    template_name = "registration.html"
+    template_name = "users/registration.html"
     success_url = reverse_lazy("users:profile_edit")
 
     def form_valid(self, form):
@@ -55,7 +55,7 @@ class UserRegisterView(CreateView):
 class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserProfileForm
-    template_name = "profile_edit.html"
+    template_name = "users/profile_edit.html"
     success_url = reverse_lazy("users:profile_edit")
 
     def get_object(self, queryset=None):
