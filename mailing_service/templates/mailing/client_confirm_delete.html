@@ -1,0 +1,31 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Удаление клиента{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="bi bi-exclamation-triangle"></i> Удаление клиента</h1>
+</div>
+
+<div class="card border-danger">
+    <div class="card-header bg-danger text-white">
+        <strong>Подтверждение удаления</strong>
+    </div>
+    <div class="card-body">
+        <p>Вы уверены, что хотите удалить клиента <strong>{{ object.full_name }}</strong> ({{ object.email }})?</p>
+        <p class="text-danger">Это действие нельзя отменить!</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{% url 'mailing:client_list' %}" class="btn btn-secondary me-md-2">
+                    <i class="bi bi-x-circle"></i> Отмена
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Удалить
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

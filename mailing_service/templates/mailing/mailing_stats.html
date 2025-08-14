@@ -1,0 +1,121 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Статистика рассылок{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="bi bi-graph-up"></i> Статистика рассылок</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Всего рассылок</h5>
+                <p class="card-text display-4">{{ total_mailings }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Активные рассылки</h5>
+                <p class="card-text display-4">{{ active_mailings }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Уникальных клиентов</h5>
+                <p class="card-text display-4">{{ unique_clients }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Последние рассылки</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_mailings %}
+                <div class="list-group">
+                    {% for mailing in recent_mailings %}
+                    <a href="{% url 'mailing:mailing_detail' mailing.pk %}"
+                       class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ mailing.message.subject }}</h6>
+                            <small class="text-muted">{{ mailing.start_time|date:"d.m.Y" }}</small>
+                        </div>
+                        <p class="mb-1">
+                            <span class="badge
+                                {% if mailing.status == 'created' %}bg-secondary
+                                {% elif mailing.status == 'started' %}bg-success
+                                {% else %}bg-dark{% endif %}">
+                                {{ mailing.get_status_display }}
+                            </span>
+                        </p>
+                        <small class="text-muted">
+                            {{ mailing.clients.count }} клиентов |
+                            {{ mailing.mailingattempt_set.count }} попыток
+                        </small>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">Нет данных о рассылках</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Последние попытки</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_attempts %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Рассылка</th>
+                                <th>Статус</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attempt in recent_attempts %}
+                            <tr>
+                                <td>{{ attempt.attempt_time|date:"d.m.Y H:i" }}</td>
+                                <td>
+                                    <a href="{% url 'mailing:mailing_detail' attempt.mailing.pk %}">
+                                        {{ attempt.mailing.message.subject|truncatechars:20 }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="badge
+                                        {% if attempt.status == 'success' %}bg-success
+                                        {% else %}bg-danger{% endif %}">
+                                        {{ attempt.get_status_display }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">Нет данных о попытках</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

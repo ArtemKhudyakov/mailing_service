@@ -1,0 +1,72 @@
+<header class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{% url 'mailing:mailing_list' %}">
+            <i class="bi bi-envelope"></i> MailService
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'mailing_list' %}active{% endif %}"
+                       href="{% url 'mailing:mailing_list' %}">
+                        <i class="bi bi-send"></i> Рассылки
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'client_list' %}active{% endif %}"
+                       href="{% url 'mailing:client_list' %}">
+                        <i class="bi bi-people"></i> Клиенты
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'message_list' %}active{% endif %}"
+                       href="{% url 'mailing:message_list' %}">
+                        <i class="bi bi-chat-text"></i> Сообщения
+                    </a>
+                </li>
+            </ul>
+
+            <div class="d-flex">
+                {% if user.is_authenticated %}
+                <div class="dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                        {% if user.avatar %}
+                        <img src="{{ user.avatar.url }}" width="30" height="30" class="rounded-circle me-1">
+                        {% else %}
+                        <i class="bi bi-person-circle me-1"></i>
+                        {% endif %}
+                        {{ user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'users:profile_edit' %}">
+                                <i class="bi bi-gear"></i> Профиль
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form method="post" action="{% url 'users:logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item">
+                                    <i class="bi bi-box-arrow-right"></i> Выйти
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                {% else %}
+                <a href="{% url 'users:login' %}" class="btn btn-outline-light me-2">
+                    <i class="bi bi-box-arrow-in-right"></i> Вход
+                </a>
+                <a href="{% url 'users:register' %}" class="btn btn-light">
+                    <i class="bi bi-person-plus"></i> Регистрация
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
