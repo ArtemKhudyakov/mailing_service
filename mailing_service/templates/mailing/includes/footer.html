@@ -1,51 +1,111 @@
-<footer class="bg-dark text-white py-4 mt-4">
+{% load static %}
+<footer class="bg-light-subtle py-5 mt-5">
     <div class="container">
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <h5><i class="bi bi-envelope"></i> MailService</h5>
-                <p class="text-muted">Профессиональный сервис для управления email-рассылками.</p>
+        <div class="row g-4">
+            <!-- Лого и описание -->
+            <div class="col-lg-4">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-envelope fs-4 text-secondary me-2"></i>
+                    <span class="fs-5 text-muted">MailService</span>
+                </div>
+                <p class="text-muted small opacity-75">
+                    Профессиональный инструмент для эффективных email-рассылок
+                </p>
+                <div class="d-flex mt-3">
+                    <a href="#" class="text-decoration-none me-3 text-secondary opacity-75 hover-opacity-100">
+                        <i class="bi bi-telegram fs-5"></i>
+                    </a>
+                    <a href="#" class="text-decoration-none me-3 text-secondary opacity-75 hover-opacity-100">
+                        <i class="bi bi-github fs-5"></i>
+                    </a>
+                    <a href="#" class="text-decoration-none text-secondary opacity-75 hover-opacity-100">
+                        <i class="bi bi-linkedin fs-5"></i>
+                    </a>
+                </div>
             </div>
 
-            <div class="col-md-2 mb-3">
-                <h5>Разделы</h5>
+            <!-- Навигация -->
+            <div class="col-lg-2 col-md-4">
+                <h6 class="text-muted mb-3 small text-uppercase fw-normal">Навигация</h6>
                 <ul class="list-unstyled">
-                    <li><a href="{% url 'mailing:mailing_list' %}" class="text-decoration-none text-muted">Рассылки</a></li>
-                    <li><a href="{% url 'mailing:client_list' %}" class="text-decoration-none text-muted">Клиенты</a></li>
-                    <li><a href="{% url 'mailing:message_list' %}" class="text-decoration-none text-muted">Сообщения</a></li>
+                    <li class="mb-2">
+                        <a href="{% url 'mailing:mailing_list' %}"
+                           class="text-decoration-none text-muted small opacity-75 hover-opacity-100">
+                            Рассылки
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'mailing:client_list' %}"
+                           class="text-decoration-none text-muted small opacity-75 hover-opacity-100">
+                            Клиенты
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'mailing:message_list' %}"
+                           class="text-decoration-none text-muted small opacity-75 hover-opacity-100">
+                            Сообщения
+                        </a>
+                    </li>
                 </ul>
             </div>
 
-            <div class="col-md-3 mb-3">
-                <h5>Аккаунт</h5>
+            <!-- Аккаунт -->
+            <div class="col-lg-3 col-md-4">
+                <h6 class="text-muted mb-3 small text-uppercase fw-normal">Аккаунт</h6>
                 <ul class="list-unstyled">
                     {% if user.is_authenticated %}
-                    <li><a href="{% url 'users:profile_edit' %}" class="text-decoration-none text-muted">Профиль</a></li>
+                    <li class="mb-2">
+                        <a href="{% url 'users:profile_edit' %}"
+                           class="text-decoration-none text-muted small opacity-75 hover-opacity-100">
+                            Профиль
+                        </a>
+                    </li>
                     <li>
-                        <form method="post" action="{% url 'users:logout' %}">
+                        <form method="post" action="{% url 'users:logout' %}" class="d-inline">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-link p-0 text-muted text-decoration-none">Выйти</button>
+                            <button type="submit"
+                                    class="btn btn-link p-0 text-decoration-none text-muted small opacity-75 hover-opacity-100">
+                                Выйти
+                            </button>
                         </form>
                     </li>
                     {% else %}
-                    <li><a href="{% url 'users:login' %}" class="text-decoration-none text-muted">Вход</a></li>
-                    <li><a href="{% url 'users:register' %}" class="text-decoration-none text-muted">Регистрация</a></li>
+                    <li class="mb-2">
+                        <a href="{% url 'users:login' %}"
+                           class="text-decoration-none text-muted small opacity-75 hover-opacity-100">
+                            Вход
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'users:register' %}"
+                           class="text-decoration-none text-muted small opacity-75 hover-opacity-100">
+                            Регистрация
+                        </a>
+                    </li>
                     {% endif %}
                 </ul>
             </div>
 
-            <div class="col-md-3">
-                <h5>Контакты</h5>
-                <ul class="list-unstyled text-muted">
-                    <li><i class="bi bi-envelope"></i> support@mailservice.com</li>
-                    <li><i class="bi bi-telephone"></i> +7 (123) 456-7890</li>
+            <!-- Контакты -->
+            <div class="col-lg-3 col-md-4">
+                <h6 class="text-muted mb-3 small text-uppercase fw-normal">Контакты</h6>
+                <ul class="list-unstyled text-muted small">
+                    <li class="mb-2 opacity-75">
+                        <i class="bi bi-envelope me-2"></i>support@mailservice.com
+                    </li>
+                    <li class="opacity-75">
+                        <i class="bi bi-telephone me-2"></i>+7 (123) 456-78-90
+                    </li>
                 </ul>
             </div>
         </div>
 
-        <hr class="my-3 bg-secondary">
+        <hr class="my-4 opacity-10">
 
-        <div class="text-center text-muted">
-            <small>&copy; {% now "Y" %} MailService. Все права защищены.</small>
+        <div class="text-center">
+            <p class="text-muted small opacity-50 mb-0">
+                &copy; {% now "Y" %} MailService. Все права защищены.
+            </p>
         </div>
     </div>
 </footer>

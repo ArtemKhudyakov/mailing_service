@@ -1,51 +1,82 @@
-:root {
-    --primary-color: #0d6efd;
-    --secondary-color: #6c757d;
-    --dark-color: #212529;
+/* Анимации */
+.fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
 }
 
-/* Анимации */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-.fade-in {
-    animation: fadeIn 0.3s ease-out;
+/* Кастомные стили для навигации */
+.navbar-brand {
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
-/* Кастомные стили для карточек */
-.service-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border: none;
-    border-radius: 0.5rem;
-    overflow: hidden;
-}
-
-.service-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-}
-
-/* Навигационные ссылки */
 .nav-link {
-    transition: all 0.2s ease;
-    border-radius: 0.25rem;
-    padding: 0.5rem 1rem;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    margin: 0 2px;
 }
 
-.nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+/* Стили для footer */
+.footer-link {
+    transition: color 0.3s ease;
 }
 
-/* Выпадающее меню пользователя */
-.dropdown-menu {
-    border: none;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+.footer-link:hover {
+    color: var(--bs-primary) !important;
 }
 
-/* Адаптивные изображения */
-.img-thumbnail {
-    max-width: 100%;
-    height: auto;
+/* Оптимизация отображения форм */
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    border-color: #86b7fe;
+}
+
+footer {
+    background-color: #f8f9fa !important;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+}
+
+.hover-primary {
+    transition: all 0.3s ease;
+}
+
+.hover-primary:hover {
+    color: var(--bs-primary) !important;
+    transform: translateX(3px);
+}
+
+.social-icons a {
+    transition: transform 0.3s ease;
+}
+
+.social-icons a:hover {
+    transform: translateY(-3px);
+}
+
+/* Улучшение читаемости */
+.text-muted {
+    color: #6c757d !important;
+}
+
+/* Светлый подвал */
+.bg-light-subtle {
+    background-color: #f8f9fa !important;
+}
+
+/* Эффекты при наведении */
+.hover-opacity-100:hover {
+    opacity: 1 !important;
+}
+
+/* Плавные переходы */
+footer a, footer button {
+    transition: all 0.25s ease;
+}
+
+/* Граница-разделитель */
+hr.opacity-10 {
+    border-color: rgba(0,0,0,0.1) !important;
 }
