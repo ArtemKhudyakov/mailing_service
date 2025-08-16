@@ -1,0 +1,59 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Добро пожаловать, {{ user.username }}</h1>
+
+        <!-- Статистика -->
+        <div class="row">
+            <!-- Все рассылки -->
+            <div class="col-md-4">
+                <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Всего рассылок</h5>
+                        <p class="card-text display-4">{{ total_mailings }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Активные рассылки -->
+            <div class="col-md-4">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Активные рассылки</h5>
+                        <p class="card-text display-4">{{ active_mailings }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Уникальные клиенты -->
+            <div class="col-md-4">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Уникальные клиенты</h5>
+                        <p class="card-text display-4">{{ unique_clients }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопки действий -->
+        <div class="text-center mt-5">
+            <a href="{% url 'mailing:mailing_list' %}" class="btn btn-lg btn-primary me-3">
+                <i class="bi bi-envelope"></i> Мои рассылки
+            </a>
+            <a href="{% url 'users:profile_edit' %}" class="btn btn-lg btn-secondary">
+                <i class="bi bi-gear"></i> Профиль
+            </a>
+
+            <a class="nav-link {% if request.resolver_match.url_name == 'stats' %}active{% endif %}"
+               href="{% url 'mailing:mailing_stats' %}">
+                <i class="bi bi-bar-chart"></i> Статистика
+            </a>
+
+        </div>
+
+    </div>
+{% endblock %}

@@ -16,7 +16,7 @@ import secrets
 
 
 class CustomLogoutView(LogoutView):
-    next_page = reverse_lazy("users:register")
+    next_page = reverse_lazy("greeting")
 
 
 class UserRegisterView(CreateView):

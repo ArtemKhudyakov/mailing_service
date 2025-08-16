@@ -105,12 +105,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
 USE_TZ = True
-
+TIME_ZONE = 'Europe/Moscow'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -129,8 +129,8 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 AUTH_USER_MODEL = "users.User"
 
-LOGIN_REDIRECT_URL = "users:profile_edit"
-LOGOUT_REDIRECT_URL = "users:register"
+LOGIN_REDIRECT_URL = 'home'  # После входа → /home/
+LOGOUT_REDIRECT_URL = 'greeting'
 LOGIN_URL = "users:login"
 
 EMAIL_HOST = "smtp.yandex.ru"

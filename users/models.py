@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from django.core.validators import FileExtensionValidator
 
 
 class User(AbstractUser):
@@ -34,8 +35,10 @@ class User(AbstractUser):
         upload_to="users/avatars",
         blank=True,
         null=True,
+        validators=[FileExtensionValidator(allowed_extensions=['jfif', 'jpg', 'jpeg', 'png'])],
         verbose_name="Аватар",
         help_text="Загрузите изображение аватара",
+
     )
     token = models.CharField(
         max_length=100, verbose_name="Токен", blank=True, null=True

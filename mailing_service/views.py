@@ -11,7 +11,25 @@ from django.db.models import Count
 
 from .models import Client, Message, Mailing, MailingAttempt
 from .forms import ClientForm, MessageForm, MailingForm
+from .tasks import send_mailing
 
+
+class GreetingView(TemplateView):
+    template_name = 'greeting.html'  # Приветствие для неавторизованных
+
+
+class HomeView(LoginRequiredMixin, TemplateView):
+    template_name = 'home.html'  # Главная для авторизованных
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        context['total_mailings'] = Mailing.objects.filter(owner=user).count()
+        context['active_mailings'] = Mailing.objects.filter(owner=user, status='started').count()
+        context['unique_clients'] = Client.objects.filter(owner=user).values('email').distinct().count()
+
+        return context
 
 #Клиенты
 class ClientListView(LoginRequiredMixin, ListView):
@@ -200,11 +218,10 @@ class MailingDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class MailingStartView(LoginRequiredMixin, View):
+class MailingStartView(View):
     def post(self, request, pk):
         mailing = get_object_or_404(Mailing, pk=pk)
 
-        # Проверка владельца
         if mailing.owner != request.user:
             raise PermissionDenied
 
@@ -212,8 +229,8 @@ class MailingStartView(LoginRequiredMixin, View):
             mailing.status = 'started'
             mailing.save()
 
-            # Здесь должна быть логика запуска рассылки через Celery
-            # Например: send_mailing_task.delay(mailing.id)
+            # Запускаем отправку
+            send_mailing(mailing.id)
 
             messages.success(request, 'Рассылка успешно запущена!')
         else:
@@ -231,21 +248,12 @@ class MailingStatsView(LoginRequiredMixin, TemplateView):
         user = self.request.user
 
         # Общая статистика
-        context['total_mailings'] = Mailing.objects.filter(owner=user).count()
-        context['active_mailings'] = Mailing.objects.filter(owner=user, status='started').count()
-        context['unique_clients'] = Client.objects.filter(owner=user).values('email').distinct().count()
+        attempts = MailingAttempt.objects.filter(mailing__owner=user)
+        context['attempts_count'] = attempts.count()
+        context['success_count'] = attempts.filter(status='success').count()
+        context['failure_count'] = attempts.filter(status='failure').count()
 
-        # Статистика по рассылкам
-        mailings = Mailing.objects.filter(owner=user).annotate(
-            attempts_count=Count('mailingattempt')
-        ).order_by('-start_time')[:5]
-
-        context['recent_mailings'] = mailings
-
-        # Статистика по попыткам
-        attempts = MailingAttempt.objects.filter(mailing__owner=user).select_related('mailing') \
-                       .order_by('-attempt_time')[:10]
-
-        context['recent_attempts'] = attempts
+        # Последние 20 попыток
+        context['attempts'] = attempts.select_related('mailing').order_by('-attempt_time')[:20]
 
         return context
