@@ -4,6 +4,7 @@ from .models import Mailing, MailingAttempt, Client
 from datetime import datetime
 from django.utils import timezone
 
+
 def send_mailing(mailing_id):
     """Отправляет рассылку и фиксирует попытки."""
     mailing = Mailing.objects.get(pk=mailing_id)
@@ -23,19 +24,19 @@ def send_mailing(mailing_id):
             # Фиксируем успешную попытку
             MailingAttempt.objects.create(
                 mailing=mailing,
-                status='success',
-                server_response='Email sent successfully',
+                status="success",
+                server_response="Email sent successfully",
             )
 
         except Exception as e:
             # Фиксируем неудачную попытку
             MailingAttempt.objects.create(
                 mailing=mailing,
-                status='failure',
+                status="failure",
                 server_response=str(e),  # Сохраняем текст ошибки
             )
 
     # Обновляем статус рассылки, если время истекло
     if mailing.end_time <= timezone.now():
-        mailing.status = 'completed'
+        mailing.status = "completed"
         mailing.save()

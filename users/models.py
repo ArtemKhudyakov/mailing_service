@@ -35,14 +35,11 @@ class User(AbstractUser):
         upload_to="users/avatars",
         blank=True,
         null=True,
-        validators=[FileExtensionValidator(allowed_extensions=['jfif', 'jpg', 'jpeg', 'png'])],
+        validators=[FileExtensionValidator(allowed_extensions=["jfif", "jpg", "jpeg", "png"])],
         verbose_name="Аватар",
         help_text="Загрузите изображение аватара",
-
     )
-    token = models.CharField(
-        max_length=100, verbose_name="Токен", blank=True, null=True
-    )
+    token = models.CharField(max_length=100, verbose_name="Токен", blank=True, null=True)
     is_verified = models.BooleanField(default=False, verbose_name="Подтвержден")
 
     USERNAME_FIELD = "email"
@@ -57,4 +54,3 @@ class User(AbstractUser):
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
         db_table = "users"
-

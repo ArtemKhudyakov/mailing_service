@@ -77,4 +77,3 @@ def email_verification(request, token):
 
     # Редирект на страницу профиля
     return redirect("users:profile_edit")
-
