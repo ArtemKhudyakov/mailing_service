@@ -1,6 +1,5 @@
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
+
 
 class ManagerRequiredMixin:
     """Только для менеджеров (role='manager')"""
@@ -8,6 +7,7 @@ class ManagerRequiredMixin:
         if not request.user.is_authenticated or request.user.role != 'manager':
             raise PermissionDenied("Доступ только для менеджеров")
         return super().dispatch(request, *args, **kwargs)
+
 
 class UserAccessMixin:
     """Пользователь может работать только со своими объектами"""

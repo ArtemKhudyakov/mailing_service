@@ -1,7 +1,6 @@
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import Mailing, MailingAttempt, Client
-from datetime import datetime
+from .models import Mailing, MailingAttempt
 from django.utils import timezone
 
 

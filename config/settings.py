@@ -2,7 +2,6 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 import os
-from django.core.cache.backends.redis import RedisCache
 
 load_dotenv(override=True)
 
@@ -155,18 +154,3 @@ CACHES = {
         "TIMEOUT": 60 * 15,  # 15 минут
     }
 }
-
-# LOGGING = {
-#     'version': 1,
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['console'],
-#             'level': 'DEBUG',
-#         },
-#     },
-# }

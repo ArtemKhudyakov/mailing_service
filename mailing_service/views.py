@@ -4,7 +4,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count
 
 from .models import Client, Message, Mailing, MailingAttempt
 from .forms import ClientForm, MessageForm, MailingForm
@@ -14,6 +13,7 @@ from users.mixins import UserAccessMixin
 
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
+
 
 class GreetingView(TemplateView):
     template_name = "greeting.html"  # Приветствие для неавторизованных
