@@ -12,6 +12,8 @@ from .tasks import send_mailing
 
 from users.mixins import UserAccessMixin
 
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 
 class GreetingView(TemplateView):
     template_name = "greeting.html"  # Приветствие для неавторизованных
@@ -32,6 +34,7 @@ class HomeView(LoginRequiredMixin, TemplateView):
 
 
 # Клиенты
+@method_decorator(cache_page(60 * 5), name='dispatch')
 class ClientListView(LoginRequiredMixin, ListView):
     model = Client
     template_name = "mailing/client_list.html"
@@ -82,6 +85,7 @@ class ClientDeleteView(LoginRequiredMixin, DeleteView):
 
 
 # Сообщения
+@method_decorator(cache_page(60 * 5), name='dispatch')
 class MessageListView(LoginRequiredMixin, ListView):
     model = Message
     template_name = "mailing/message_list.html"
@@ -132,6 +136,7 @@ class MessageDeleteView(LoginRequiredMixin, DeleteView):
 
 
 # Рассылки
+@method_decorator(cache_page(60 * 5), name='dispatch')
 class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
     template_name = "mailing/mailing_list.html"
@@ -198,6 +203,7 @@ class MailingDeleteView(LoginRequiredMixin, DeleteView):
         return super().form_valid(form)
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class MailingDetailView(LoginRequiredMixin, DetailView):
     model = Mailing
     template_name = "mailing/mailing_detail.html"
@@ -236,6 +242,7 @@ class MailingStartView(View):
 
 
 # Статистика
+@method_decorator(cache_page(60 * 30), name='dispatch')
 class MailingStatsView(LoginRequiredMixin, TemplateView):
     template_name = "mailing/mailing_stats.html"
 

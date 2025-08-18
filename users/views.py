@@ -16,6 +16,9 @@ from django.conf import settings
 from django.views.generic import ListView
 from .mixins import ManagerRequiredMixin
 
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+
 import secrets
 
 
@@ -84,6 +87,7 @@ def email_verification(request, token):
 
 
 # Список всех пользователей (только для менеджеров)
+@method_decorator(cache_page(60 * 10), name='dispatch')
 class UserListView(ManagerRequiredMixin, ListView):
     model = User
     template_name = 'users/user_list.html'
