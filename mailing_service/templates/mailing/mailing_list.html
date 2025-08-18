@@ -40,8 +40,7 @@
             <div class="col">
                 <div class="card h-100">
                     <div class="card-header">
-                        <span class="badge
-                            {% if mailing.status == 'created' %}bg-secondary
+                        <span class="badge {% if mailing.status == 'created' %}bg-secondary
                             {% elif mailing.status == 'started' %}bg-success
                             {% else %}bg-dark{% endif %}">
                             {{ mailing.get_status_display }}
@@ -60,6 +59,16 @@
                             <i class="bi bi-people"></i>
                             {{ mailing.clients.count }} клиентов
                         </p>
+                        {% if request.user.role == 'manager' %}
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <i class="bi bi-person"></i> Владелец: {{ mailing.owner.username }}
+                                {% if mailing.owner.is_blocked %}
+                                    <span class="badge bg-danger ms-2">Заблокирован</span>
+                                {% endif %}
+                            </small>
+                        </p>
+                        {% endif %}
                     </div>
                     <div class="card-footer bg-transparent">
                         <div class="btn-group btn-group-sm">
@@ -88,15 +97,8 @@
                 <div class="alert alert-info">Нет рассылок</div>
             </div>
             {% endfor %}
-
         </div>
     </div>
-</div>
-<div class="card-footer">
-    <a href="{% url 'mailing:mailing_stats' %}?mailing_id={{ mailing.id }}"
-       class="btn btn-sm btn-info">
-       <i class="bi bi-bar-chart"></i> Статистика
-    </a>
 </div>
 
 {% if is_paginated %}

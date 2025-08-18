@@ -10,6 +10,8 @@ from .models import Client, Message, Mailing, MailingAttempt
 from .forms import ClientForm, MessageForm, MailingForm
 from .tasks import send_mailing
 
+from users.mixins import UserAccessMixin
+
 
 class GreetingView(TemplateView):
     template_name = "greeting.html"  # Приветствие для неавторизованных
@@ -137,13 +139,9 @@ class MailingListView(LoginRequiredMixin, ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = Mailing.objects.filter(owner=self.request.user)
-
-        status = self.request.GET.get("status")
-        if status in ["created", "started", "completed"]:
-            queryset = queryset.filter(status=status)
-
-        return queryset.order_by("-start_time")
+        if self.request.user.role == 'manager':
+            return Mailing.objects.all()
+        return Mailing.objects.filter(owner=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -168,7 +166,7 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class MailingUpdateView(LoginRequiredMixin, UpdateView):
+class MailingUpdateView(LoginRequiredMixin, UserAccessMixin, UpdateView):
     model = Mailing
     form_class = MailingForm
     template_name = "mailing/mailing_form.html"

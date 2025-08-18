@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LogoutView
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 
@@ -11,6 +12,9 @@ from django.core.mail import send_mail
 from .forms import UserRegistrationForm, UserProfileForm
 from .models import User
 from django.conf import settings
+
+from django.views.generic import ListView
+from .mixins import ManagerRequiredMixin
 
 import secrets
 
@@ -77,3 +81,22 @@ def email_verification(request, token):
 
     # Редирект на страницу профиля
     return redirect("users:profile_edit")
+
+
+# Список всех пользователей (только для менеджеров)
+class UserListView(ManagerRequiredMixin, ListView):
+    model = User
+    template_name = 'users/user_list.html'
+    context_object_name = 'users'
+
+
+# Блокировка/разблокировка пользователей
+def toggle_user_block(request, user_id):
+    if request.user.role != 'manager':
+        raise PermissionDenied
+
+    user = get_object_or_404(User, id=user_id)
+    user.is_blocked = not user.is_blocked
+    user.save()
+    messages.success(request, f"Пользователь {user.email} {'заблокирован' if user.is_blocked else 'разблокирован'}")
+    return redirect('users:user_list')

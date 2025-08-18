@@ -9,6 +9,8 @@ from .views import (
 from django.contrib.auth import views as auth_views
 from .forms import CustomPasswordResetForm
 
+from .views import UserListView, toggle_user_block
+
 app_name = 'users'
 
 urlpatterns = [
@@ -42,4 +44,6 @@ urlpatterns = [
          auth_views.PasswordResetCompleteView.as_view(
              template_name='users/password_reset_complete.html',
          ), name='password_reset_complete'),
+    path('manager/users/', UserListView.as_view(), name='user_list'),
+    path('manager/users/toggle_block/<int:user_id>/', toggle_user_block, name='toggle_user_block'),
 ]

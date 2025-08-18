@@ -47,6 +47,21 @@ class User(AbstractUser):
         "username",
     ]
 
+    ROLES = (
+        ('user', 'Пользователь'),
+        ('manager', 'Менеджер'),
+    )
+    role = models.CharField(
+        max_length=10,
+        choices=ROLES,
+        default='user',
+        verbose_name="Роль"
+    )
+    is_blocked = models.BooleanField(
+        default=False,
+        verbose_name="Заблокирован"
+    )
+
     def __str__(self):
         return self.username
 
@@ -54,3 +69,7 @@ class User(AbstractUser):
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
         db_table = "users"
+        permissions = [
+            ("block_user", "Может блокировать пользователей"),
+            ("disable_mailing", "Может отключать рассылки"),
+        ]
