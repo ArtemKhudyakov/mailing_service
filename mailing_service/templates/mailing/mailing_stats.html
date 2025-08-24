@@ -1,0 +1,68 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Статистика рассылок{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2><i class="bi bi-bar-chart"></i> Детальная статистика</h2>
+
+    <!-- Общая сводка -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Всего попыток</h5>
+                    <p class="display-4">{{ attempts_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Успешных</h5>
+                    <p class="display-4">{{ success_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Неудачных</h5>
+                    <p class="display-4">{{ failure_count }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Таблица попыток -->
+    <h3 class="mt-4">История попыток</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Рассылка</th>
+                <th>Статус</th>
+                <th>Ответ сервера</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attempt in attempts %}
+            <tr>
+                <td>{{ attempt.attempt_time|date:"d.m.Y H:i" }}</td>
+                <td>{{ attempt.mailing.message.subject|truncatechars:30 }}</td>
+                <td>
+                    <span class="badge bg-{% if attempt.status == 'success' %}success{% else %}danger{% endif %}">
+                        {{ attempt.get_status_display }}
+                    </span>
+                </td>
+                <td>{{ attempt.server_response|default:"—" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">Нет данных о попытках</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

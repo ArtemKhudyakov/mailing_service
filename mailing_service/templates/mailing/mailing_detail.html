@@ -1,0 +1,135 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Детали рассылки{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-envelope-open"></i> Детали рассылки
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{% url 'mailing:mailing_update' mailing.pk %}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-pencil"></i> Редактировать
+            </a>
+            <a href="{% url 'mailing:mailing_delete' mailing.pk %}" class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-trash"></i> Удалить
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Основная информация</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Статус:</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge {% if mailing.status == 'created' %}bg-secondary
+                            {% elif mailing.status == 'started' %}bg-success
+                            {% else %}bg-dark{% endif %}">
+                            {{ mailing.get_status_display }}
+                        </span>
+                    </dd>
+
+                    <dt class="col-sm-4">Начало:</dt>
+                    <dd class="col-sm-8">{{ mailing.start_time|date:"d.m.Y H:i" }}</dd>
+
+                    <dt class="col-sm-4">Окончание:</dt>
+                    <dd class="col-sm-8">{{ mailing.end_time|date:"d.m.Y H:i" }}</dd>
+
+                    <dt class="col-sm-4">Клиентов:</dt>
+                    <dd class="col-sm-8">{{ mailing.clients.count }}</dd>
+
+                    {% if request.user.role == 'manager' %}
+                    <dt class="col-sm-4">Владелец:</dt>
+                    <dd class="col-sm-8">
+                        {{ mailing.owner.username }}
+                        {% if mailing.owner.is_blocked %}
+                            <span class="badge bg-danger ms-2">Заблокирован</span>
+                        {% endif %}
+                    </dd>
+                    {% endif %}
+                </dl>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Сообщение</h5>
+            </div>
+            <div class="card-body">
+                <h6>{{ mailing.message.subject }}</h6>
+                <p>{{ mailing.message.body }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Попытки отправки</h5>
+            </div>
+            <div class="card-body">
+                {% if attempts %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Статус</th>
+                                <th>Ответ сервера</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attempt in attempts %}
+                            <tr>
+                                <td>{{ attempt.attempt_time|date:"d.m.Y H:i" }}</td>
+                                <td>
+                                    <span class="badge {% if attempt.status == 'success' %}bg-success
+                                        {% else %}bg-danger{% endif %}">
+                                        {{ attempt.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>{{ attempt.server_response|truncatechars:30 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">Нет данных о попытках отправки</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if request.user.role == 'manager' %}
+<div class="card mt-4 border-warning">
+    <div class="card-header bg-warning text-dark">
+        <h5 class="mb-0"><i class="bi bi-shield-lock"></i> Управление доступом</h5>
+    </div>
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h6>Владелец: {{ mailing.owner.username }}</h6>
+                <p class="mb-0">Email: {{ mailing.owner.email }}</p>
+                {% if mailing.owner.is_blocked %}
+                    <span class="badge bg-danger">Заблокирован</span>
+                {% endif %}
+            </div>
+            <a href="{% url 'users:toggle_user_block' mailing.owner.id %}"
+               class="btn {% if mailing.owner.is_blocked %}btn-success{% else %}btn-danger{% endif %}">
+                <i class="bi bi-{% if mailing.owner.is_blocked %}unlock{% else %}lock{% endif %}"></i>
+                {% if mailing.owner.is_blocked %}Разблокировать{% else %}Заблокировать{% endif %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
